@@ -1,7 +1,8 @@
 # vars for window coordinates
-window_size = 720
-centerX = window_size / 2
-centerY = window_size / 2
+window_width = 720
+window_height = 720
+centerX = window_width / 2
+centerY = window_height / 2
 
 # base RGB values
 r = 30

@@ -6,7 +6,7 @@ from floating_circles import *
 add_library('minim')
 
 def setup():
-    size(window_size,window_size)
+    size(window_width,window_height)
     
 mode_counter = 0
 def draw():
