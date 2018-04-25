@@ -12,10 +12,11 @@ mode_counter = 0
 def draw():
     background(0)
     mode = mode_counter%NUM_MODES
-    if mode == ZOOM:
-        zooming_circles()
-    else:
-        floating_circles()
+    # if mode == ZOOM:
+    #     zooming_circles()
+    # else:
+    #     floating_circles()
+    floating_circles()
 
 should_loop = True
 def keyPressed():
