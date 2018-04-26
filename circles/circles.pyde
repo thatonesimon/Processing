@@ -16,7 +16,8 @@ def draw():
     #     zooming_circles()
     # else:
     #     floating_circles()
-    floating_circles()
+    zooming_circles()
+    # floating_circles()
 
 should_loop = True
 def keyPressed():
@@ -30,6 +31,3 @@ def keyPressed():
     elif key == "a":
         global mode_counter
         mode_counter+=1
-      
-      
-      

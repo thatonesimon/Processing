@@ -1,7 +1,5 @@
 from config import *
 
-setup = False
-
 # circle definitions
 rad_step = 50
 radius = 100
@@ -21,12 +19,13 @@ def floating_circles():
     for c in circles:
         stroke(c.color.r, c.color.g, c.color.b, 255*c.y/height)
         fill(c.color.r, c.color.g, c.color.b, 255*c.y/height)
-        ellipse(c.x, c.y, c.radius, c.radius)
+        c.draw()
         # ellipse(width-c.x, height-c.y, c.radius, c.radius)
         c.y += c.dy
         if c.y <= -c.radius:
             reset_circle(c)
-    
+
+setup = False
 def float_setup():
     global setup
     if not setup:
@@ -39,13 +38,15 @@ def create_circle():
     start_radius = random(min_rad, max_rad)
     y = height + start_radius
     dy = -random(min_dy, max_dy)
-    new_circle = Circle(x, y, start_radius, 0, dy, random(255), random(255), random(255))
+    new_circle = Circle(x, y, start_radius, 0, dy)
+    new_circle.color.randomize()
     circles.append(new_circle)
     
-def create_circle(x, y):
+def click_circle(x, y):
     start_radius = random(min_rad, max_rad)
     dy = -random(min_dy, max_dy)
-    new_circle = Circle(x, y, start_radius, 0, dy, random(255), random(255), random(255))
+    new_circle = Circle(x, y, start_radius, 0, dy)
+    new_circle.color.randomize()
     circles.append(new_circle)
     
 def reset_circle(c):
@@ -53,6 +54,8 @@ def reset_circle(c):
     c.radius = random(min_rad, max_rad)
     c.y = height + radius
     c.dy = -random(min_dy, max_dy)
+    c.color.randomize()
     
 def mouseClicked():
-    create_circle(mouseX, mouseY)
+    print "Mouse clicked"
+    click_circle(mouseX, mouseY)
