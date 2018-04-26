@@ -19,14 +19,18 @@ def zooming_circles():
     for c in circles:
         level_color = gradient(start_color, end_color, c.radius/float(max_rad))
         fill(level_color.r, level_color.g, level_color.b)
-        # fill(level_color.r+sin(c.radius)*50, level_color.g+sin(c.radius)*50, level_color.b+sin(c.radius)*50)
+        fill(level_color.r+sin(c.radius/50)*50, level_color.g+sin(c.radius/50)*50, level_color.b+sin(c.radius/50)*50)
         c.draw()
         c.radius += 1
-        if(c.radius >= max_rad):
-            # remove circle
-            circles.remove(c)
+        
+        if len(circles) < num_circles and circles[len(circles)-1].radius >= rad_step:
             new_circle = Circle(centerX, centerY, 0)
             circles.append(new_circle)
+            
+        if c.radius >= max_rad:
+            # remove circle
+            circles.remove(c)
+
     
     # r = 255*sin(angle)%255
     # for i in reversed(xrange(num_circles)):
@@ -42,8 +46,10 @@ setup = False
 def zoom_setup():
     global setup
     if not setup:
-        for i in xrange(num_circles):
-            print i
-            new_circle = Circle(centerX, centerY, max_rad - rad_step*i)
-            circles.append(new_circle)
+        new_circle = Circle(centerX, centerY, 0)
+        circles.append(new_circle)
+        # for i in xrange(num_circles):
+        #     print i
+        #     new_circle = Circle(centerX, centerY, max_rad - rad_step*i)
+        #     circles.append(new_circle)
         setup = True
