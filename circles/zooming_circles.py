@@ -2,14 +2,14 @@ from config import *
 
 # circle definitions
 circles = []
-num_circles = 25
-max_rad = max(window_width, window_height) + 500
+num_circles = 20
+max_rad = max(window_width, window_height)+400
 rad_step = max_rad/num_circles
 radius = 100
 angle = 0
 
 start_color = Color(255,150,0)
-end_color = Color(0, 255, 0)
+end_color = Color(0, 255, 150)
 
 def zooming_circles():
     global r, g, b, radius, angle
@@ -18,12 +18,13 @@ def zooming_circles():
     
     for c in circles:
         level_color = gradient(start_color, end_color, c.radius/float(max_rad))
+        
         fill(level_color.r, level_color.g, level_color.b)
         fill(level_color.r+sin(c.radius/50)*50, level_color.g+sin(c.radius/50)*50, level_color.b+sin(c.radius/50)*50)
         c.draw()
-        c.radius += 1
+        c.radius += 2
         
-        if len(circles) < num_circles and circles[len(circles)-1].radius >= rad_step:
+        if len(circles) <= num_circles and circles[len(circles)-1].radius >= rad_step:
             new_circle = Circle(centerX, centerY, 0)
             circles.append(new_circle)
             

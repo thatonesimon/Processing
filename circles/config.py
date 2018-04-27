@@ -57,12 +57,15 @@ class Circle:
         ellipse(self.x, self.y, self.radius, self.radius)
         
         
+start_color = Color(255,150,0)
+end_color = Color(0, 255, 0)
+
 def gradient(c1, c2, percent):
-    dr = abs(c1.r - c2.r)
-    dg = abs(c1.g - c2.g)
-    db = abs(c1.b - c2.b)
-    r = dr*percent + min(c1.r, c2.r)
-    g = dg*percent + min(c1.g, c2.g)
-    b = db*percent + min(c1.b, c2.b)
+    dr = c2.r - c1.r
+    dg = c2.g - c1.g
+    db = c2.b - c1.b
+    r = c1.r + dr*percent
+    g = c1.g + dg*percent
+    b = c1.b + db*percent
     grad_color = Color(r, g, b)
     return grad_color
