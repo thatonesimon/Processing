@@ -27,6 +27,16 @@ class Color:
         self.r = random(255)
         self.g = random(255)
         self.b = random(255)
+    
+    def gradient(self, c2, percent):
+        dr = c2.r - self.r
+        dg = c2.g - self.g
+        db = c2.b - self.b
+        r = self.r + dr*percent
+        g = self.g + dg*percent
+        b = self.b + db*percent
+        grad_color = Color(r, g, b)
+        return grad_color
         
     def to_white(self, percent):
         return self.gradient(WHITE, percent)
@@ -41,15 +51,8 @@ class Color:
         # return '#%02x%02x%02x' % (self.r, self.g, self.b)
         return int(self.r*16^4 + self.g*16^2 + self.b)
     
-    def gradient(self, c2, percent):
-        dr = c2.r - self.r
-        dg = c2.g - self.g
-        db = c2.b - self.b
-        r = self.r + dr*percent
-        g = self.g + dg*percent
-        b = self.b + db*percent
-        grad_color = Color(r, g, b)
-        return grad_color
+def rand_color():
+    return Color(random(255), random(255), random(255))
 
 WHITE = Color(255, 255, 255)
 BLACK = Color(0, 0, 0)
