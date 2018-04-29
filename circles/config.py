@@ -69,3 +69,6 @@ def gradient(c1, c2, percent):
     b = c1.b + db*percent
     grad_color = Color(r, g, b)
     return grad_color
+
+def to_white(c, percent):
+    return gradient(c, Color(255, 255, 255), percent)

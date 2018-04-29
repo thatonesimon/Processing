@@ -17,7 +17,8 @@ def zooming_circles():
     zoom_setup()
     
     for c in circles:
-        level_color = gradient(start_color, end_color, c.radius/float(max_rad))
+        # level_color = gradient(start_color, end_color, c.radius/float(max_rad))
+        level_color = to_white(start_color, c.radius/float(max_rad))
         
         fill(level_color.r, level_color.g, level_color.b)
         fill(level_color.r+sin(c.radius/50)*50, level_color.g+sin(c.radius/50)*50, level_color.b+sin(c.radius/50)*50)
