@@ -25,7 +25,7 @@ def generate_line():
         p.dy += random(-d, d)
         p.x += p.dx
         p.y += p.dy
-        p.size += 1
+        p.size += 0.5
     
         if p.x-p.size > width or p.x+p.size < 0 or p.y-p.size > width or p.y+p.size < 0:
             p.x = centerX
