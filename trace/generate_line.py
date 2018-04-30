@@ -8,17 +8,15 @@ dx = 0.0
 dy = 0.0
 d = 1.0
 
-c = Color(0, 0, 0)
-c.randomize()
-
-def generate_line():
+def generate_lines():
     global dx, dy, dot_size, points
     
     gen_line_setup()
     # background(0)
-    print len(points)
     for p in points:
         # stroke(c.r, c.g, c.b)
+        cur_stroke = p.c.to_black(1 - 10.0/p.size)
+        stroke(cur_stroke.r, cur_stroke.g, cur_stroke.b) 
         fill(p.c.r, p.c.g, p.c.b)
         ellipse(p.x, p.y, p.size, p.size)
         p.dx += random(-d, d)
@@ -33,14 +31,17 @@ def generate_line():
             p.dx = 0
             p.dy = 0
             p.size = 10.0
-            p.c.randomize()
+            p.c.lite_randomize()
             
 setup = False
 def gen_line_setup():
     global setup
     if not setup:
         for i in xrange(num_points):
-            global points
-            p = Point(centerX, centerY)
-            points.append(p)
+           add_point(centerX, centerY)
         setup = True
+        
+def add_point(x, y):
+    global points
+    p = Point(x, y)
+    points.append(p)

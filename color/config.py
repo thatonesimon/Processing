@@ -4,6 +4,13 @@ window_height = 720
 centerX = window_width / 2
 centerY = window_height / 2
 
+class Block:
+    
+    def __init__(self, x, y, color):
+        self.x = x
+        self.y = y
+        self.color = color
+
 class Color:
     
     r = 0
@@ -50,6 +57,15 @@ class Color:
     def to_hex(self):
         # return '#%02x%02x%02x' % (self.r, self.g, self.b)
         return int(self.r*16^4 + self.g*16^2 + self.b)
+    
+    def cpy(self):
+        return Color(self.r, self.g, self.b)
+    
+    def equals(self, c):
+        if self.r == c.r and self.g == c.g and self.b == c.b:
+            return True
+        else:
+            return False
     
 def rand_color():
     return Color(random(255), random(255), random(255))

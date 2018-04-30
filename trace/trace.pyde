@@ -15,4 +15,8 @@ def draw():
     # trace_circle()
     # draw_lines()
     # generate_worm()
-    generate_line()
+    generate_lines()
+    
+def mouseClicked():
+    
+    add_point(mouseX, mouseY)
