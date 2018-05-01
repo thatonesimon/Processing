@@ -8,7 +8,7 @@ dx = 0.0
 dy = 0.0
 d = 1.0
 
-def generate_lines():
+def generate_worms():
     global dx, dy, dot_size, points
     
     gen_line_setup()

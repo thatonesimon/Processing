@@ -12,7 +12,7 @@ cur = Point(0, 0)
 
 c = Color(255, 255, 255)
 
-def generate_worm():
+def generate_arcs():
     global angle, radius, p
     
     stroke(255)
@@ -24,16 +24,16 @@ def generate_worm():
         cur.y = center.y + dir*radius*cos(angle)
     ellipse(cur.x, cur.y, dot_size, dot_size)
     angle += angle_step
-    if angle >= 2*PI:
-        if random(10) > 9:
+    if angle%2*PI >= PI:
+        if random(10) > 5:
             randomize()
-            angle = 0
+            angle = (angle+PI)%(2*PI)
     
     
 def randomize():
     global radius, center, dir
     
-    new_radius = radius
+    new_radius = random(10, 100)
     dx = (cur.x - center.x)/radius
     dy = (cur.y - center.y)/radius
     center.x = cur.x + dx*new_radius

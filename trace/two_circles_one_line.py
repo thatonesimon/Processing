@@ -5,19 +5,20 @@ c2_rad = 200
 angle = 0
 
 num_lines = 6
+step = 2*PI/num_lines
 
 def draw_lines():
     global angle
     
-    # background(0)
+    background(0)
     fill(0)
     stroke(255)
     # ellipse(centerX, centerY, c1_rad, c1_rad)
     # ellipse(centerX, centerY, c2_rad, c2_rad)
     
     for i in xrange(num_lines):
-        c1_point = c1(angle+0.1*i)
-        c2_point = c2(angle+0.1*i)
+        c1_point = c1(angle+step*i)
+        c2_point = c2(angle+step*i)
         line(c1_point[0], c1_point[1], c2_point[0], c2_point[1])
         
     angle += 0.01
