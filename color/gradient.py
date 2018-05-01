@@ -34,4 +34,3 @@ def anim_vert_grad():
         next_color = rand_color()
         grad = 0.0
         
-    print str(start_color) + str(end_color)

@@ -34,6 +34,9 @@ class Color:
         self.r = random(255)
         self.g = random(255)
         self.b = random(255)
+        
+    def opposite(self):
+        return Color(255-self.r, 255-self.g, 255-self.b)
     
     def gradient(self, c2, percent):
         dr = c2.r - self.r
