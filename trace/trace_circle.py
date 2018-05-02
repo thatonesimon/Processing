@@ -2,31 +2,32 @@ from config import *
 
 # point definitions
 points = []
-num_points = 1
+layers = 3
+layer_size = 50
+num_points = 6
 step = 2*PI/num_points
-radius = 5
+radius = 100
+dot_size = 5
 angle = 0
-distance = 0.0
-max_dist = 200.0
-dist_step = 25.0
+direction = 1
 
 
 def trace_circle():
-    global num_points, step, angle, distance, dist_step
+    global num_points, step, angle, distance, dist_step, direction
     
     circle_setup()
     background(0)
     
     stroke(255)
-    for i in xrange(num_points):
-        ellipse(centerX + distance*cos(angle+i*step), centerY + distance*sin(angle+i*step), radius, radius)
-    angle += 0.01
-    distance += dist_step
-    if distance > max_dist or distance < 0:
-        dist_step = -dist_step
-    if distance < 0:
-        num_points += 1
-        step = 2*PI/num_points
+    for layer in xrange(layers):
+        for i in xrange(num_points):
+            x = centerX + (radius+layer*layer_size)*cos(angle+i*step)
+            y = centerY + direction*(radius+layer*layer_size)*sin(angle+i*step)
+            # ellipse(centerX + radius*cos(angle+i*step), centerY + radius*sin(angle+i*step), dot_size, dot_size)
+            # ellipse(centerX + (radius+i*layer_size)*cos(angle+i*step), centerY + (radius+i*layer_size)*sin(angle+i*step), dot_size, dot_size)
+            ellipse(x, y, dot_size, dot_size)
+        angle += 0.01
+        direction = -direction
         
     
     

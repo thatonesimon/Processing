@@ -46,6 +46,7 @@ def generate_grid():
     connect(next)
     cur = next
     dir = go
+    saveFrame("img/grid-###.jpg")
     
 def connect(next):
     
@@ -62,7 +63,7 @@ def setup_generate_grid():
         setup = True
         
 def reset_grid():
-    global cells_taken
+    global cur, cells_taken
     cur = [num_row/2,num_col/2]
     cells_taken = []
     background(0)
