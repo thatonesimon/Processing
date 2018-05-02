@@ -54,10 +54,10 @@ def draw():
     next_speed = speed+weight*gravity*gravity_dir
     # print degrees(cur_angle)
     if speed >= 0 and next_speed < 0:
-        print "Hit left"
+        # print "Hit left " + str(PI/2-cur_angle)
         addRing()
     if speed <= 0 and next_speed > 0:
-        print "Hit right"
+        # print "Hit right " + str(PI/2-cur_angle)
         addRing()
     speed = next_speed
     
@@ -66,6 +66,25 @@ def draw():
 def mouseClicked():
     print mouseX
     print mouseY
+    
+def keyPressed():
+    print keyCode
+    # UP
+    if keyCode == 38:
+        global string_len
+        string_len -= 3
+    # DOWN
+    elif keyCode == 40:
+        global string_len
+        string_len += 3
+    # LEFT
+    elif keyCode == 37:
+        global speed
+        speed += gravity
+    # RIGHT
+    elif keyCode == 39:
+        global speed
+        speed -= gravity
 
 string_len = 400
 string_start = [centerX, 200]
@@ -75,13 +94,13 @@ def drawString():
     line(string_start[0], string_start[1], string_end[0], string_end[1])
 
 pen_size = 50
-cur_angle = PI/4
+cur_angle = PI/8
 cur_hue = 0.0
 direction = 1
 gravity = 0.001
 gravity_dir = 1
 speed = 0.0
-weight = 5.0
+weight = 1.0
 def drawPen():
     stroke(0)
     fill(cur_hue%100, 50, 100)
@@ -89,20 +108,31 @@ def drawPen():
     
 rings = []
 ring_hue = 0.0
+max_rings = 15
 def addRing():
     global rings, ring_hue
     
     new_ring = [string_end[0], string_end[1], pen_size, 100-cur_hue%100]
     rings.append(new_ring)
+    if len(rings) > max_rings:
+        rings.remove(rings[0])
     ring_hue += 10
     
+layers = 3
+layer_size = 30
 def drawRings():
     global rings
     
     # noFill()
     for ring in rings:
+        stroke(0)
         fill(ring[3]%100, 50, 100)
-        # stroke(cur_hue%100, 50, 100)
         ellipse(ring[0], ring[1], ring[2], ring[2])
         ring[2] += 1
+        # for layer in xrange(layers):
+        #     fill(ring[3]%100, 50-10*layer, 100)
+        #     # stroke(cur_hue%100, 50, 100)
+        #     ellipse(ring[0], ring[1], ring[2]-layer*layer_size, ring[2]-layer*layer_size)
+        #     noStroke()
+        #     ring[2] += 1
     
