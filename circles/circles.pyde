@@ -9,6 +9,7 @@ def setup():
 mode_counter = 0
 def draw():
     background(0)
+    # colorMode(HSB, 255)
     mode = mode_counter%NUM_MODES
     # if mode == ZOOM:
     #     zooming_circles()

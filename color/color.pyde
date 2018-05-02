@@ -14,7 +14,6 @@ def setup():
 
 def draw():
 
-    
     # vertical_grad()
     # horizontal_grad()
     # anim_vert_grad()
@@ -22,7 +21,8 @@ def draw():
     # color_blocks(c_1, c_2)
     # moving_blocks()
     
-    hsb_test()
+    # hsb_test()
+    hsb_morph()
     
 
 def keyPressed():
