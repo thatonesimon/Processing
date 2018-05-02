@@ -5,9 +5,9 @@ def setup():
     colorMode(HSB, 100)
     background(100, 0, 100)
     # frameRate(1)
-    
-    global img
-    img = loadImage("res/hand.png")
+    global hand, head
+    hand = loadImage("res/hand.png")
+    head = loadImage("res/head.png")
     
 def draw():
     global string_end, cur_angle, cur_hue, direction, gravity, gravity_dir, speed
@@ -15,8 +15,9 @@ def draw():
     background(100-cur_hue%100, 50, 100)
     drawRings()
     # this is hardcoded (bad)
-    image(img, centerX-140, 95)
-    
+    tint(cur_hue%100, 50, 100)
+    image(hand, centerX-140, 95)
+    # image(head, 0,0)
     string_end[0] = string_start[0] + string_len*cos(cur_angle)
     string_end[1] = string_start[1] + string_len*sin(cur_angle)
     
@@ -124,15 +125,25 @@ def drawRings():
     global rings
     
     # noFill()
-    for ring in rings:
-        stroke(0)
-        fill(ring[3]%100, 50, 100)
-        ellipse(ring[0], ring[1], ring[2], ring[2])
-        ring[2] += 1
-        # for layer in xrange(layers):
-        #     fill(ring[3]%100, 50-10*layer, 100)
-        #     # stroke(cur_hue%100, 50, 100)
-        #     ellipse(ring[0], ring[1], ring[2]-layer*layer_size, ring[2]-layer*layer_size)
-        #     noStroke()
-        #     ring[2] += 1
+    for i, ring in enumerate(rings):
+        # left ring
+        if i%2 == 1:
+            stroke(0)
+            fill(ring[3]%100, 50, 100)
+            ellipse(ring[0], ring[1], ring[2], ring[2])
+            ring[2] += 1
+
+        # right ring
+        else:
+            stroke(0)
+            fill(ring[3]%100, 50, 100)
+            ellipse(ring[0], ring[1], ring[2], ring[2])
+            # ellipse(ring[0], ring[1], ring[2]+100*cos(PI/2*cur_angle), ring[2]+100*cos(PI/2*cur_angle))
+            ring[2] += 1
+            # for layer in xrange(layers):
+            #     fill(ring[3]%100, 50-10*layer, 100)
+            #     # stroke(cur_hue%100, 50, 100)
+            #     ellipse(ring[0], ring[1], ring[2]-layer*layer_size, ring[2]-layer*layer_size)
+            #     noStroke()
+            #     ring[2] += 1
     
