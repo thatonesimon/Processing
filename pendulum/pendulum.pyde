@@ -12,6 +12,8 @@ def setup():
 def draw():
     global string_end, cur_angle, cur_hue, direction, gravity, gravity_dir, speed
     
+    pulseCheck()
+    
     background(100-cur_hue%100, 50, 100)
     drawRings()
     drawHand()
@@ -67,6 +69,10 @@ def mouseClicked():
     print mouseY
     
 def keyPressed():
+    
+    if key == " ":
+        pulsate()
+        
     print keyCode
     # UP
     if keyCode == 38:
@@ -90,7 +96,7 @@ def drawHand():
     image(hand, centerX-140, 95)
     
 def drawHead():
-    tint(cur_hue, 50, 100)
+    tint(0, 0, 0)
     image(head, centerX-100, 7*window_height/10, 200, 200*head.height/head.width)
 
 string_len = 300
@@ -132,8 +138,8 @@ def addRing():
     global rings, ring_hue
     new_ring = [string_end[0], string_end[1], pen_size, 100-cur_hue%100]
     rings.append(new_ring)
-    if len(rings) > max_rings:
-        rings.remove(rings[0])
+    # if len(rings) > max_rings:
+    #     rings.remove(rings[0])
     ring_hue += 10
     
 layers = 3
@@ -147,14 +153,17 @@ def drawRings():
         if i%2 == 1:
             stroke(0)
             fill(ring[3]%100, 50, 100)
-            ellipse(ring[0], ring[1], ring[2], ring[2])
+            ellipse(ring[0], ring[1], ring[2]+pulse, ring[2]+pulse)
             ring[2] += 1
+            
+            if ring[2] > width:
+                rings.remove(ring)
 
         # right ring
         else:
             stroke(0)
             fill(ring[3]%100, 50, 100)
-            ellipse(ring[0], ring[1], ring[2], ring[2])
+            ellipse(ring[0], ring[1], ring[2]+pulse, ring[2]+pulse)
             # ellipse(ring[0], ring[1], ring[2]+100*cos(PI/2*cur_angle), ring[2]+100*cos(PI/2*cur_angle))
             ring[2] += 1
             # for layer in xrange(layers):
@@ -163,4 +172,14 @@ def drawRings():
             #     ellipse(ring[0], ring[1], ring[2]-layer*layer_size, ring[2]-layer*layer_size)
             #     noStroke()
             #     ring[2] += 1
+   
+pulse = 0
+pulse_max = 75
+def pulsate():
+    global pulse
+    pulse = pulse_max
     
+def pulseCheck():
+    global pulse
+    if pulse > 0:
+        pulse -= 2
