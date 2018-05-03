@@ -14,10 +14,8 @@ def draw():
     
     background(100-cur_hue%100, 50, 100)
     drawRings()
-    # this is hardcoded (bad)
-    tint(cur_hue%100, 50, 100)
-    image(hand, centerX-140, 95)
-    # image(head, 0,0)
+    drawHand()
+    drawHead()
     string_end[0] = string_start[0] + string_len*cos(cur_angle)
     string_end[1] = string_start[1] + string_len*sin(cur_angle)
     
@@ -86,8 +84,16 @@ def keyPressed():
     elif keyCode == 39:
         global speed
         speed -= gravity
+        
+def drawHand():
+    tint(cur_hue%100, 50, 100)
+    image(hand, centerX-140, 95)
+    
+def drawHead():
+    tint(cur_hue, 50, 100)
+    image(head, centerX-100, 7*window_height/10, 200, 200*head.height/head.width)
 
-string_len = 400
+string_len = 300
 string_start = [centerX, 200]
 string_end = [0, 0]
 def drawString():
@@ -103,16 +109,27 @@ gravity_dir = 1
 speed = 0.0
 weight = 1.0
 def drawPen():
-    stroke(0)
     fill(cur_hue%100, 50, 100)
+    drawTail()
+    stroke(0)
     ellipse(string_end[0], string_end[1], pen_size, pen_size)
+    
+num_trails = 7
+def drawTail():
+    noStroke()
+    for i in reversed(xrange(num_trails)):
+        fill(cur_hue%100, 50, 100, 100-100*i/num_trails)
+        trail_center = [None, None]
+        trail_center[0] = string_start[0] + string_len*cos(cur_angle-i*speed)
+        trail_center[1] = string_start[1] + string_len*sin(cur_angle-i*speed)
+        ellipse(trail_center[0], trail_center[1], pen_size-5*i, pen_size-5*i)
+    
     
 rings = []
 ring_hue = 0.0
 max_rings = 15
 def addRing():
     global rings, ring_hue
-    
     new_ring = [string_end[0], string_end[1], pen_size, 100-cur_hue%100]
     rings.append(new_ring)
     if len(rings) > max_rings:
