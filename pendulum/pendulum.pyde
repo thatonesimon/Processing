@@ -12,12 +12,15 @@ def setup():
 def draw():
     global string_end, cur_angle, cur_hue, direction, gravity, gravity_dir, speed
     
+    # user inputted pulse
     pulseCheck()
     
     background(100-cur_hue%100, 50, 100)
     drawRings()
     drawHand()
     drawHead()
+    
+    # calculate string end 
     string_end[0] = string_start[0] + string_len*cos(cur_angle)
     string_end[1] = string_start[1] + string_len*sin(cur_angle)
     
@@ -34,13 +37,6 @@ def draw():
     # elif next_angle - cur_angle < 0 and cur_angle < PI/2:
     #     gravity_dir = -1
         
-    # if reach max left or right
-    # TODO: count only the max hit
-    # if cur_angle < PI/4:
-    #     print "Hit right"
-    # if cur_angle > 3*PI/4:
-    #     print "Hit left"
-        
     # if reaching bottom from right to left <-
     if cur_angle < PI/2 and next_angle > PI/2:
         # print "Sweep right to left"
@@ -55,10 +51,10 @@ def draw():
     next_speed = speed+weight*gravity*gravity_dir
     # print degrees(cur_angle)
     if speed >= 0 and next_speed < 0:
-        # print "Hit left " + str(PI/2-cur_angle)
+        print "Hit left " + str(PI/2-cur_angle)
         addRing()
     if speed <= 0 and next_speed > 0:
-        # print "Hit right " + str(PI/2-cur_angle)
+        print "Hit right " + str(PI/2-cur_angle)
         addRing()
     speed = next_speed
     
@@ -110,10 +106,10 @@ pen_size = 50
 cur_angle = PI/8
 cur_hue = 0.0
 direction = 1
-gravity = 0.001
+gravity = PI/2500
 gravity_dir = 1
 speed = 0.0
-weight = 1.0
+weight = .50
 def drawPen():
     fill(cur_hue%100, 50, 100)
     drawTail()
@@ -122,13 +118,15 @@ def drawPen():
     
 num_trails = 7
 def drawTail():
-    noStroke()
+    # noStroke()
     for i in reversed(xrange(num_trails)):
+        stroke(0, 0, 0, 100-100*i/num_trails)
         fill(cur_hue%100, 50, 100, 100-100*i/num_trails)
-        trail_center = [None, None]
-        trail_center[0] = string_start[0] + string_len*cos(cur_angle-i*speed)
-        trail_center[1] = string_start[1] + string_len*sin(cur_angle-i*speed)
-        ellipse(trail_center[0], trail_center[1], pen_size-5*i, pen_size-5*i)
+        tail_center = [None, None]
+        tail_center[0] = string_start[0] + string_len*cos(cur_angle-i*speed)
+        tail_center[1] = string_start[1] + string_len*sin(cur_angle-i*speed)
+        ellipse(tail_center[0], tail_center[1], pen_size-5*i, pen_size-5*i)
+        # ellipse(tail_center[0], tail_center[1], pen_size-5*i, pen_size)
     
     
 rings = []
@@ -136,7 +134,7 @@ ring_hue = 0.0
 max_rings = 15
 def addRing():
     global rings, ring_hue
-    new_ring = [string_end[0], string_end[1], pen_size, 100-cur_hue%100]
+    new_ring = Circle(string_end[0], string_end[1], pen_size, 100-cur_hue%100)
     rings.append(new_ring)
     # if len(rings) > max_rings:
     #     rings.remove(rings[0])
@@ -152,20 +150,20 @@ def drawRings():
         # left ring
         if i%2 == 1:
             stroke(0)
-            fill(ring[3]%100, 50, 100)
-            ellipse(ring[0], ring[1], ring[2]+pulse, ring[2]+pulse)
-            ring[2] += 1
+            ring.draw(pulse)
+            ring.radius += 1
             
-            if ring[2] > width:
+            if ring.radius > width:
                 rings.remove(ring)
 
         # right ring
         else:
             stroke(0)
-            fill(ring[3]%100, 50, 100)
-            ellipse(ring[0], ring[1], ring[2]+pulse, ring[2]+pulse)
-            # ellipse(ring[0], ring[1], ring[2]+100*cos(PI/2*cur_angle), ring[2]+100*cos(PI/2*cur_angle))
-            ring[2] += 1
+            ring.draw(pulse)
+            ring.radius += 1
+            
+            if ring.radius > width:
+                rings.remove(ring)
             # for layer in xrange(layers):
             #     fill(ring[3]%100, 50-10*layer, 100)
             #     # stroke(cur_hue%100, 50, 100)
@@ -174,12 +172,13 @@ def drawRings():
             #     ring[2] += 1
    
 pulse = 0
-pulse_max = 75
+pulse_max = 100
 def pulsate():
     global pulse
     pulse = pulse_max
     
 def pulseCheck():
     global pulse
-    if pulse > 0:
-        pulse -= 2
+    # 0.1 to stop calculations after a little
+    if pulse > 0.1:
+        pulse *= 0.9
