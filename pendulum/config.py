@@ -8,6 +8,7 @@ class Color:
     h = 0
     s = 0
     b = 0
+    a = 100
     
     def __init__(self, h, s, b):
         self.h = h
@@ -15,7 +16,7 @@ class Color:
         self.b = b
         
     def asColor(self):
-        return color(self.h, self.s, self.b)
+        return color(self.h, self.s, self.b, self.a)
 
 class Circle:
     x = 0
@@ -30,5 +31,6 @@ class Circle:
         self.color = Color(h, s, b)
     
     def draw(self, pulse = 0):
+        stroke(0, 0, 0, self.color.a)
         fill(self.color.asColor())
         ellipse(self.x, self.y, self.radius + pulse, self.radius + pulse)
