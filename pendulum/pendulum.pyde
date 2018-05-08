@@ -9,13 +9,8 @@ def setup():
     hand = loadImage("res/hand.png")
     head = loadImage("res/head.png")
 
-it = 0
 def draw():
     global string_end, cur_angle, cur_hue, direction, gravity, gravity_dir, speed
-    
-    global it
-    it += 1
-    print it
     
     # user inputted pulse
     pulseCheck()
@@ -141,48 +136,41 @@ def drawTail():
 bubbles = []
 bubble_size = 10
 bubble_dir = 0
+num_bubbles = 6
 def addBubble():
     global bubbles, bubble_dir
     bubble_group = []
-    for i in xrange(4):
+    for i in xrange(num_bubbles):
         bubble = Circle(string_start[0], string_start[1]+string_len, bubble_size, 100-cur_hue%100)
         bubble_group.append(bubble)
+    # bubble_dir means + or x motion
     bubbles.append([bubble_group, bubble_dir%2])
     bubble_dir += 1
-    
+
 bubble_angle = 0
+spiral_angle = 0
 def drawBubbles():
     global bubbles
     
-    for i, bubble_group in enumerate(bubbles):
+    for bubble_group in bubbles:
         if bubble_group[1] == 0:
             bubble_angle = 0
         else:
-            bubble_angle = PI/4
-        for i, bubble in enumerate(bubble_group[0]):
+            bubble_angle = PI/num_bubbles
+            
+        for bubble in bubble_group[0]:
             bubble.draw()
-            direction = i%4
-            # right
-            if direction == 0:
-                bubble.x += cos(bubble_angle)
-                bubble.y += sin(bubble_angle)
-            # down
-            elif direction == 1:
-                bubble.x -= sin(bubble_angle)
-                bubble.y += cos(bubble_angle)
-            # left
-            elif direction == 2:
-                bubble.x -= cos(bubble_angle)
-                bubble.y -= sin(bubble_angle)
-            # up
-            elif direction == 3:
-                bubble.x += sin(bubble_angle)
-                bubble.y -= cos(bubble_angle)
-        
+            
+            # first bubble will be moving right
+            bubble.x += cos(bubble_angle+spiral_angle)
+            bubble.y += sin(bubble_angle+spiral_angle)
+            bubble.radius += 2.0/num_bubbles
             bubble.color.a -= 0.5
             
+            bubble_angle += 2*PI/num_bubbles
+        
         # once bubble has dissapeared, remove from array
-        if bubble_group[0][0].color.a == 0:
+        if bubble_group[0][0].color.a <= 0:
             bubbles.remove(bubble_group)
     
 rings = []

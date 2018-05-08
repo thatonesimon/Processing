@@ -34,3 +34,30 @@ class Circle:
         stroke(0, 0, 0, self.color.a)
         fill(self.color.asColor())
         ellipse(self.x, self.y, self.radius + pulse, self.radius + pulse)
+        
+# group of objects that moves around in circle
+class CircleGroup:
+    
+    cen_x = 0
+    cen_y = 0
+    
+    radius = 0
+    angle = 0
+    
+    circles = []
+    num_circles = 0
+    
+    def __init__(self, cen_x, cen_y, radius = 0, angle = 0):
+        self.cen_x = cen_x
+        self.cen_y = cen_y
+        self.radius = radius
+        self.angle = angle
+        
+    def add(self, c):
+        self.circles.append(c)
+        self.num_circles += 1
+        
+    def draw(self, pulse = 0):
+        for c in circles:
+            ellipse(c.x+self.x, c.y+self.y, c.radius + pulse, c.radius + pulse)
+    
