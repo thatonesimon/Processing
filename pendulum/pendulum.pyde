@@ -10,57 +10,20 @@ def setup():
     head = loadImage("res/head.png")
 
 def draw():
-    global string_end, cur_angle, cur_hue, direction, gravity, gravity_dir, speed
+    global cur_hue
+    
+    background(100-cur_hue%100, 50, 100)
     
     # user inputted pulse
     pulseCheck()
     
-    background(100-cur_hue%100, 50, 100)
     drawRings()
     drawBubbles()
     drawHand()
     drawHead()
-    
-    # calculate string end 
-    string_end[0] = string_start[0] + string_len*cos(cur_angle)
-    string_end[1] = string_start[1] + string_len*sin(cur_angle)
 
     drawString()
     drawPen()
-    
-    next_angle = cur_angle + speed
-
-    # if passing by bottom of swing leftwards
-    if next_angle > PI/2 and cur_angle < PI/2:
-        print PI/2-next_angle
-        print PI/2-cur_angle
-        addBubble()
-    
-    # if passing by bottom of swing rightwards
-    elif next_angle < PI/2 and cur_angle > PI/2:
-        addBubble()
-        
-    # if reaching bottom from right to left <-
-    if cur_angle < PI/2 and next_angle > PI/2:
-        # print "Sweep right to left"
-        gravity *= -1
-
-    # if reaching bottom from left to right ->
-    elif cur_angle > PI/2 and next_angle < PI/2:
-        # print "Sweep left to right"
-        gravity *= -1
-    
-    cur_angle = next_angle
-    
-    next_speed = speed+weight*gravity*gravity_dir
-    # print degrees(cur_angle)
-    if speed >= 0 and next_speed < 0:
-        print "Hit left " + str(PI/2-cur_angle)
-        addRing()
-    elif speed <= 0 and next_speed > 0:
-        print "Hit right " + str(PI/2-cur_angle)
-        addRing()
-    speed = next_speed
     
     cur_hue += 0.1
     
@@ -73,9 +36,8 @@ def keyPressed():
     if key == " ":
         pulsate()
         
-    print keyCode
     # UP
-    if keyCode == 38:
+    elif keyCode == 38:
         global string_len
         string_len -= 3
     # DOWN
@@ -103,6 +65,12 @@ string_len = 300
 string_start = [centerX, 200]
 string_end = [0, 0]
 def drawString():
+    global string_end
+    
+    # calculate string end 
+    string_end[0] = string_start[0] + string_len*cos(cur_angle)
+    string_end[1] = string_start[1] + string_len*sin(cur_angle)
+    
     stroke(0)
     line(string_start[0], string_start[1], string_end[0], string_end[1])
 
@@ -115,10 +83,42 @@ gravity_dir = 1
 speed = 0.0
 weight = 10.0
 def drawPen():
+    global cur_angle, direction, gravity, gravity_dir, speed
+    
     fill(cur_hue%100, 50, 100)
     drawTail()
     stroke(0)
     ellipse(string_end[0], string_end[1], pen_size, pen_size)
+    
+    next_angle = cur_angle + speed
+
+    # if passing by bottom of swing leftwards
+    if next_angle > PI/2 and cur_angle < PI/2:
+        addBubble()
+    
+    # if passing by bottom of swing rightwards
+    elif next_angle < PI/2 and cur_angle > PI/2:
+        addBubble()
+        
+    # if reaching bottom from right to left <-
+    if cur_angle < PI/2 and next_angle > PI/2:
+        # print "Sweep right to left"
+        gravity *= -1
+
+    # if reaching bottom from left to right ->
+    elif cur_angle > PI/2 and next_angle < PI/2:
+        # print "Sweep left to right"
+        gravity *= -1
+    
+    cur_angle = next_angle
+    
+    next_speed = speed+weight*gravity*gravity_dir
+    # print degrees(cur_angle)
+    if speed >= 0 and next_speed < 0:
+        addRing()
+    elif speed <= 0 and next_speed > 0:
+        addRing()
+    speed = next_speed
     
 num_trails = 4
 def drawTail():
@@ -136,7 +136,7 @@ def drawTail():
 bubbles = []
 bubble_size = 10
 bubble_dir = 0
-num_bubbles = 6
+num_bubbles = 5
 def addBubble():
     global bubbles, bubble_dir
     bubble_group = []
@@ -154,14 +154,14 @@ def drawBubbles():
     
     for bubble_group in bubbles:
         if bubble_group[1] == 0:
-            bubble_angle = 0
+            bubble_angle = -PI/2
         else:
-            bubble_angle = PI/num_bubbles
+            bubble_angle = -PI/2+PI/num_bubbles
             
         for bubble in bubble_group[0]:
             bubble.draw()
             
-            # first bubble will be moving right
+            # first bubble will be moving up
             bubble.x += cos(bubble_angle+spiral_angle)
             bubble.y += sin(bubble_angle+spiral_angle)
             bubble.radius += 2.0/num_bubbles
@@ -169,9 +169,10 @@ def drawBubbles():
             
             bubble_angle += 2*PI/num_bubbles
         
-        # once bubble has dissapeared, remove from array
-        if bubble_group[0][0].color.a <= 0:
-            bubbles.remove(bubble_group)
+    # once bubble has dissapeared, remove from array
+    if len(bubbles) > 0 and bubbles[0][0][0].color.a <= 0:
+        print "remove group"
+        bubbles.remove(bubbles[0])
     
 rings = []
 ring_hue = 0.0
