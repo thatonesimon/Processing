@@ -16,8 +16,8 @@ def setup():
     # music
     global player, beat
     minim = Minim(this)
-    player = minim.loadFile("res/newshit.mp3")
-    beat = BeatDetect()
+    player = minim.loadFile("res/relax.mp3")
+    beat = BeatDetect(player.bufferSize(), player.sampleRate())
     # prevent beat from hitting too often
     beat.setSensitivity(300); 
     player.play()
@@ -156,45 +156,30 @@ def drawTail():
         
 flowers = []
 flower_size = 10
-flower_dir = 0
-num_flowers = 5
+flower_dir = 1
+num_petals = 5
+flower_offset = -PI/2
 def addFlower():
-    global flowers, flower_dir
-    flower_group = []
-    for i in xrange(num_flowers):
-        flower = Circle(string_start[0], string_start[1]+string_len, flower_size, 100-cur_hue%100)
-        flower_group.append(flower)
-    # flower_dir means + or x motion
-    flowers.append([flower_group, flower_dir%2])
-    flower_dir += 1
+    global flowers, flower_dir, test_flowers
+    # play around with this flower color
+    flower_color = Color(100-cur_hue%100, 50, 100)
+    new_flower = Flower(string_start[0], string_start[1]+string_len, -PI/2, flower_color, flower_dir)
+    flowers.append(new_flower)
+    flower_dir *= -1
 
 flower_angle = 0
 spiral_angle = 0
 def drawFlowers():
     global flowers, spiral_angle
     
-    for flower_group in flowers:
-        if flower_group[1] == 0:
-            flower_angle = -PI/2
-        else:
-            flower_angle = -PI/2+PI/num_flowers
-            
-        for flower in flower_group[0]:
-            flower.draw()
-            
-            # first flower will be moving up
-            flower.x += cos(flower_angle+spiral_angle)
-            flower.y += sin(flower_angle+spiral_angle)
-            flower.radius += 2.0/num_flowers
-            flower.color.a -= 0.5
-            
-            flower_angle += 2*PI/num_flowers
-            
-    spiral_angle += 0.01
-        
+    for flower in flowers:
+        # flower.draw(spiral_angle)
+        flower.draw()
     # once flower has dissapeared, remove from array
-    if len(flowers) > 0 and flowers[0][0][0].color.a <= 0:
+    if len(flowers) > 0 and flowers[0].color.a <= 0:
         flowers.remove(flowers[0])
+        
+    spiral_angle += 0.01
     
 rings = []
 ring_hue = 0.0
@@ -250,7 +235,17 @@ def pulseCheck():
     
     beat.detect(player.mix)
     if beat.isOnset():
+        print "onset"
         pulsate()
+        
+    if beat.isHat():
+        print "hat"
+    
+    if beat.isKick():
+        print "kick"
+        
+    if beat.isSnare():
+        print "snare"
     
     # print player.right.level()
     # if player.right.level() > 0.3:

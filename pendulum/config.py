@@ -41,29 +41,35 @@ class Flower:
     x = 0
     y = 0
     radius = 0
-    num_petals = 0
-    petal_size = 0
+    flower_angle = 0
+    num_petals = 5
+    petal_size = 10
     color = None
+    dir = 1
     
-    def __init__(self, x, y, radius, num_petals, petal_size, color):
+    def __init__(self, x, y, flower_angle, color, dir):
         self.x = x
         self.y = y
-        self.radius = radius
-        self.num_petals = num_petals
-        self.petal_size = petal_size
+        self.flower_angle = flower_angle
         self.color = color
+        self.dir = dir
         
     def draw(self, spiral_angle = 0):
-        
+        stroke(0, 0, 0, self.color.a)
         fill(self.color.h, self.color.s, self.color.b, self.color.a)
         
-        flower_angle += 2*PI/num_flowers
+        self.flower_angle += 2*PI/self.num_petals
         
-        for i in range(num_petals):
-            x = self.x + self.radius*cos(flower_angle + spiral_angle)
-            y = self.y + self.radius*sin(flower_angle + spiral_angle)
+        for i in range(self.num_petals):
+            x = self.x + self.radius*cos(self.dir*(self.flower_angle + spiral_angle))
+            y = self.y + self.radius*sin(self.dir*(self.flower_angle + spiral_angle))
             ellipse(x, y, self.petal_size, self.petal_size)
-            flower_angle += 2*PI/self.num_petals
+            self.flower_angle += 2*PI/self.num_petals
+            
+        self.flower_angle += 0.01
+        self.radius += 1
+        self.petal_size += 2.0/self.num_petals
+        self.color.a -= 0.5
             
         
             
