@@ -3,9 +3,11 @@ from config import *
 add_library('minim')
 player = None
 beat = None
+beat_size = 0
 
 def setup():
-    size(window_width, window_height)
+    # size(window_width, window_height, P2D)
+    fullScreen(P2D)
     colorMode(HSB, 100)
     background(100, 0, 100)
     # frameRate(1)
@@ -14,13 +16,17 @@ def setup():
     head = loadImage("res/head.png")
     
     # music
-    global minim, player, beat
+    global minim, player, beat, beat_size
     minim = Minim(this)
     player = minim.loadFile("res/relax.mp3")
     beat = BeatDetect(player.bufferSize(), player.sampleRate())
     # prevent beat from hitting too often
-    beat.setSensitivity(300); 
+    beat.setSensitivity(2000);
     player.play()
+    beat_size = beat.detectSize() 
+    
+    global string_len
+    string_len = height-500
 
 def draw():
     global cur_hue
@@ -31,6 +37,8 @@ def draw():
     pulseCheck()
     
     drawRings()
+    onsetCheck()
+    
     drawFlowers()
     drawHand()
     drawHead()
@@ -79,7 +87,7 @@ def drawHand():
     
 def drawHead():
     tint(0, 0, 0)
-    image(head, -100, 7*window_height/10, 200, 200*head.height/head.width)
+    image(head, -100, 7*height/10, 200, 200*head.height/head.width)
 
 string_len = 300
 string_start = [0, 200]
@@ -232,34 +240,53 @@ def pulseCheck():
     global pulse
     
     beat.detect(player.mix)
-    for i in range(beat.detectSize()):
-        if beat.isOnset(i):
-            print "onset: " + str(i)
         
-    if beat.isHat():
-        print "hat"
-        # pulsate()
+    # if beat.isHat():
+    #     print "hat"
+    #     # pulsate()
     
-    if beat.isKick():
-        print "kick"
-        # pulsate()
+    # if beat.isKick():
+    #     print "kick"
+    #     # pulsate()
         
-    if beat.isSnare():
-        print "snare"
-        # pulsate()
+    # if beat.isSnare():
+    #     print "snare"
+    #     # pulsate()
         
-    print player.right.level()
-    if player.right.level() > 0.5:
-        print "right up"
+    # power of next note i guess
+    # print player.right.level()
+    if player.right.level() > 0.45:
         pulsate()
     
-    # print player.right.level()
-    # if player.right.level() > 0.3:
-    #     pulsate()
         
     # 0.1 to stop calculations after a little
     if pulse > 0.1:
         pulse *= 0.9
+        
+onset_bubbles = []
+def onsetCheck():
+    global onset_bubbles
+    for i in range(beat_size):
+        if beat.isOnset(i):
+            x = i*width/beat_size-width/2+beat_size/2
+            new_circle = Circle(x, height, 10, cur_hue%100)
+            onset_bubbles.append(new_circle)
+            # print "onset: " + str(i)
+    
+    drawOnsetBubbles()
+    
+onset_swerve = 0.0
+def drawOnsetBubbles():
+    global onset_bubbles, onset_swerve
+    
+    for bubble in onset_bubbles:
+        bubble.draw(pulse/3.0)
+        bubble.x += cos(onset_swerve)/2
+        bubble.y -= 1.0
+        if bubble.y <= 0.0-bubble.radius:
+            onset_bubbles.remove(bubble)
+            
+    onset_swerve += 0.01
         
         
         
