@@ -14,7 +14,7 @@ def setup():
     head = loadImage("res/head.png")
     
     # music
-    global player, beat
+    global minim, player, beat
     minim = Minim(this)
     player = minim.loadFile("res/relax.mp3")
     beat = BeatDetect(player.bufferSize(), player.sampleRate())
@@ -68,12 +68,10 @@ def keyPressed():
         string_len += 3
     # LEFT
     elif keyCode == 37:
-        global speed
-        speed += gravity
+        player.skip(-5000)
     # RIGHT
     elif keyCode == 39:
-        global speed
-        speed -= gravity
+        player.skip(5000)
         
 def drawHand():
     tint(cur_hue%100, 50, 100)
@@ -234,18 +232,26 @@ def pulseCheck():
     global pulse
     
     beat.detect(player.mix)
-    if beat.isOnset():
-        print "onset"
-        pulsate()
+    for i in range(beat.detectSize()):
+        if beat.isOnset(i):
+            print "onset: " + str(i)
         
     if beat.isHat():
         print "hat"
+        # pulsate()
     
     if beat.isKick():
         print "kick"
+        # pulsate()
         
     if beat.isSnare():
         print "snare"
+        # pulsate()
+        
+    print player.right.level()
+    if player.right.level() > 0.5:
+        print "right up"
+        pulsate()
     
     # print player.right.level()
     # if player.right.level() > 0.3:
@@ -254,3 +260,11 @@ def pulseCheck():
     # 0.1 to stop calculations after a little
     if pulse > 0.1:
         pulse *= 0.9
+        
+        
+        
+def stop():
+    # always close Minim audio classes when you are finished with them
+    player.close()
+    # always stop Minim before exiting
+    minim.stop()
