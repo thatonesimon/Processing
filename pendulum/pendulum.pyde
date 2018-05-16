@@ -91,7 +91,7 @@ def keyPressed():
         
 def drawHand():
     tint(cur_hue%100, 50, 100)
-    image(hand, -140, 95)
+    image(hand, -140, 95, 170, 170*hand.height/hand.width)
     
 def drawHead():
     tint(0, 0, 0)
@@ -248,35 +248,32 @@ def pulsate():
         pulse = pulse_max
 
     if left:
-        if left_pulse < 0.1:
+        if left_pulse < 10:
             left_pulse = pulse_max
-    else:
-        if right_pulse < 0.1:
             right_pulse = pulse_max
-            
-    left = not left
+            left = not left
+    else:
+        left = not left
+        # if right_pulse < 10:
+        #     right_pulse = pulse_max
+        #     left = not left
     
+    
+last_trig = 0
 def pulseCheck():
     global pulse, left_pulse, right_pulse
     
     beat.detect(player.mix)
         
-    # if beat.isHat():
-    #     print "hat"
-    #     # pulsate()
-    
-    # if beat.isKick():
-    #     print "kick"
-    #     # pulsate()
-        
-    # if beat.isSnare():
-    #     print "snare"
-    #     # pulsate()
-        
     # power of next note i guess
-    # print player.right.level()
-    if player.mix.level() > 0.45:
-        pulsate()
+    global last_trig
+    time = millis()
+    print time-last_trig
+    if time-last_trig >= 500:
+        if player.mix.level() > 0.45:
+            pulsate()
+            last_trig = time
+        
         
     # print mic.mix.level()
     # if mic.mix.level() > 0.005:
