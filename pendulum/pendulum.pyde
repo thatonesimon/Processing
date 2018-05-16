@@ -6,8 +6,8 @@ beat = None
 beat_size = 0
 
 def setup():
-    # size(window_width, window_height, P2D)
-    fullScreen(P2D)
+    size(window_width, window_height, P2D)
+    # fullScreen(P2D)
     colorMode(HSB, 100)
     background(100, 0, 100)
     # frameRate(1)
@@ -18,6 +18,7 @@ def setup():
     # music
     global minim, player, beat, beat_size
     minim = Minim(this)
+    # aftergold, newshit, relax, song
     player = minim.loadFile("res/relax.mp3")
     beat = BeatDetect(player.bufferSize(), player.sampleRate())
     # prevent beat from hitting too often
@@ -26,7 +27,7 @@ def setup():
     beat_size = beat.detectSize() 
     
     global string_len
-    string_len = height-500
+    string_len = height/2
 
 def draw():
     global cur_hue
@@ -41,12 +42,14 @@ def draw():
     
     drawFlowers()
     drawHand()
-    drawHead()
+    # drawHead()
 
     drawString()
     drawPen()
     
     cur_hue += 0.1
+    
+    # saveFrame("out/relax####.png")
     
 def mouseClicked():
     print mouseX
@@ -109,7 +112,7 @@ direction = 1
 gravity = PI/120/50
 gravity_dir = 1
 speed = 0.0
-weight = 5.0
+weight = 2.65
 def drawPen():
     global cur_angle, direction, gravity, gravity_dir, speed
     
@@ -165,6 +168,7 @@ flower_size = 10
 flower_dir = 1
 num_petals = 5
 flower_offset = -PI/2
+last_spawn = 0
 def addFlower():
     global flowers, flower_dir, test_flowers
     # play around with this flower color
@@ -172,6 +176,10 @@ def addFlower():
     new_flower = Flower(string_start[0], string_start[1]+string_len, -PI/2, flower_color, flower_dir)
     flowers.append(new_flower)
     flower_dir *= -1
+    # global last_spawn
+    # time = millis()
+    # print str(time-last_spawn)
+    # last_spawn = time
 
 flower_angle = 0
 spiral_angle = 0
@@ -186,10 +194,9 @@ def drawFlowers():
         flowers.remove(flowers[0])
         
     spiral_angle += 0.01
-    
+
 rings = []
 ring_hue = 0.0
-max_rings = 15
 def addRing():
     global rings, ring_hue
     new_ring = Circle(string_end[0], string_end[1], 0, 100-cur_hue%100)
@@ -202,7 +209,6 @@ layers = 3
 layer_size = 30
 # TODO: change ring size on algorithm
 def drawRings():
-    global rings
     
     # noFill()
     for i, ring in enumerate(rings):
@@ -212,7 +218,7 @@ def drawRings():
             ring.draw(pulse)
             ring.radius += 1
             
-            if ring.radius > width:
+            if ring.radius > 2*width:
                 rings.remove(ring)
 
         # right ring
@@ -221,14 +227,9 @@ def drawRings():
             ring.draw(pulse)
             ring.radius += 1
             
-            if ring.radius > width:
+            if ring.radius > 2*width:
                 rings.remove(ring)
-            # for layer in xrange(layers):
-            #     fill(ring[3]%100, 50-10*layer, 100)
-            #     # stroke(cur_hue%100, 50, 100)
-            #     ellipse(ring[0], ring[1], ring[2]-layer*layer_size, ring[2]-layer*layer_size)
-            #     noStroke()
-            #     ring[2] += 1
+
    
 pulse = 0
 pulse_max = pen_size
@@ -255,7 +256,7 @@ def pulseCheck():
         
     # power of next note i guess
     # print player.right.level()
-    if player.right.level() > 0.45:
+    if player.mix.level() > 0.45:
         pulsate()
     
         
@@ -280,6 +281,7 @@ def drawOnsetBubbles():
     global onset_bubbles, onset_swerve
     
     for bubble in onset_bubbles:
+        stroke(0, 0, 0, 0)
         bubble.draw(pulse/3.0)
         bubble.x += cos(onset_swerve)/2
         bubble.y -= 1.0

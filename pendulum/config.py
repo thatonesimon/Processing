@@ -31,7 +31,7 @@ class Circle:
         self.color = Color(h, s, b)
     
     def draw(self, pulse = 0):
-        stroke(0, 0, 0, self.color.a)
+        # stroke(0, 0, 0, self.color.a)
         fill(self.color.asColor())
         ellipse(self.x, self.y, self.radius + pulse, self.radius + pulse)
         
