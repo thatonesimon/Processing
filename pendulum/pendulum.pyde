@@ -5,6 +5,7 @@ player = None
 beat = None
 beat_size = 0
 
+SONG_BMP = 85
 def setup():
     size(window_width, window_height, P2D)
     # fullScreen(P2D)
@@ -14,6 +15,7 @@ def setup():
     global hand, head
     hand = loadImage("res/hand.png")
     head = loadImage("res/head.png")
+    frameRate(45)
     
     # music
     global minim, player, beat, beat_size
@@ -25,6 +27,9 @@ def setup():
     beat.setSensitivity(2000);
     player.play()
     beat_size = beat.detectSize() 
+    
+    global mic
+    mic = minim.getLineIn()
     
     global string_len
     string_len = height/2
@@ -112,7 +117,9 @@ direction = 1
 gravity = PI/120/50
 gravity_dir = 1
 speed = 0.0
-weight = 2.65
+# weight = 2.65
+# weight = 0.1236 * SONG_BMP
+weight = 0.06 * SONG_BMP
 def drawPen():
     global cur_angle, direction, gravity, gravity_dir, speed
     
@@ -201,8 +208,6 @@ def addRing():
     global rings, ring_hue
     new_ring = Circle(string_end[0], string_end[1], 0, 100-cur_hue%100)
     rings.append(new_ring)
-    # if len(rings) > max_rings:
-    #     rings.remove(rings[0])
     ring_hue += 10
     
 layers = 3
@@ -235,19 +240,24 @@ pulse = 0
 left_pulse = 0
 right_pulse = 0
 pulse_max = pen_size
+left = True
 def pulsate():
-    global pulse
+    global pulse, left_pulse, right_pulse, left
     
     if pulse < 10:
         pulse = pulse_max
 
-    if left_pulse < 10:
-        left_pulse = pulse_max
-    if right_pulse < 10:
-        right_pulse = pulse_max
+    if left:
+        if left_pulse < 0.1:
+            left_pulse = pulse_max
+    else:
+        if right_pulse < 0.1:
+            right_pulse = pulse_max
+            
+    left = not left
     
 def pulseCheck():
-    global pulse
+    global pulse, left_pulse, right_pulse
     
     beat.detect(player.mix)
         
@@ -267,6 +277,10 @@ def pulseCheck():
     # print player.right.level()
     if player.mix.level() > 0.45:
         pulsate()
+        
+    # print mic.mix.level()
+    # if mic.mix.level() > 0.005:
+    #     pulsate()
     
         
     # 0.1 to stop calculations after a little
