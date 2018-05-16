@@ -215,7 +215,7 @@ def drawRings():
         # left ring
         if i%2 == 1:
             stroke(0)
-            ring.draw(pulse)
+            ring.draw(left_pulse)
             ring.radius += 1
             
             if ring.radius > 2*width:
@@ -224,7 +224,7 @@ def drawRings():
         # right ring
         else:
             stroke(0)
-            ring.draw(pulse)
+            ring.draw(right_pulse)
             ring.radius += 1
             
             if ring.radius > 2*width:
@@ -232,10 +232,19 @@ def drawRings():
 
    
 pulse = 0
+left_pulse = 0
+right_pulse = 0
 pulse_max = pen_size
 def pulsate():
     global pulse
-    pulse = pulse_max
+    
+    if pulse < 10:
+        pulse = pulse_max
+
+    if left_pulse < 10:
+        left_pulse = pulse_max
+    if right_pulse < 10:
+        right_pulse = pulse_max
     
 def pulseCheck():
     global pulse
@@ -263,6 +272,10 @@ def pulseCheck():
     # 0.1 to stop calculations after a little
     if pulse > 0.1:
         pulse *= 0.9
+    if left_pulse > 0.1:
+        left_pulse *= 0.9
+    if right_pulse > 0.1:
+        right_pulse *= 0.9
         
 onset_bubbles = []
 def onsetCheck():
