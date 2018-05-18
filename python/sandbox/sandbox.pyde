@@ -2,49 +2,71 @@ from config import *
 
 def setup():
 
-    size(720, 1080)
+    size(720, 720)
     # size(720, 720, OPENGL)
-    noLoop()
-    
     
 def center():
     
+    # move to middle
     translate(width/2, height/2)
-    rotate(radians(45))
-    translate(-200, -200)
+    # flip the y
+    scale(1, -1)
     
     
-seed_rad = 2000
 seed_x = 0
+seed_y = 0
+seed_rad = 620
+seed_angle = 0
+num_points = 5
+point_step = 360/num_points
 def draw():
     
     background(0)
     
     center()
     
-    global seed_rad, seed_x
+    global seed_x, seed_y, seed_rad, seed_angle
     
     stroke(255)
     noFill()
-    circle(seed_x, 0, seed_rad)
+    circle(seed_x, seed_y, seed_rad)
     
-    seed_rad += 100
+    inner_shape = []
+    for i in range(num_points):
+        
+        x = seed_rad*cos(radians(i*point_step+seed_angle))/2
+        y = seed_rad*sin(radians(i*point_step+seed_angle))/2
+        inner_shape.append(PVector(x, y))
+        
+    inner_inner_shape = []
+    last = inner_shape[len(inner_shape)-1]
+    beginShape()
+    for p in inner_shape:
+        vertex(p.x, p.y)
+        old_p = p.copy()
+        p.sub(last)
+        last = old_p
+        
+    endShape(CLOSE)
     
-    if seed_rad > 2000:
-        seed_rad = 1000
-    seed_rad += 1.0
+    # beginShape()
+    # for p in inner_shape:
+    #     vertex(p.x, p.y)
+    #     p.sub(last)
+    #     last = p
+        
+    # endShape(CLOSE)
+    
+    
+    
+    seed_angle += 1
+
     
     
 def circle(x, y, rad):
     
-    # strokeWeight(2)
-    
-    stroke(x, y, x+y, 255*rad/100+50)
+    stroke(255, 255, 255)
     ellipse(x, y, rad, rad)
 
-    if rad > 10:
-        circle(x-rad/4, y, rad*0.5)
-        circle(x+rad/4, y, rad*0.5)
-        circle(x, y-rad/4, rad*0.5)
-        circle(x, y+rad/4, rad*0.5)
+
     
